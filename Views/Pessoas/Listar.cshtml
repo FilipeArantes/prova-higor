@@ -1,0 +1,93 @@
+@model List<Pessoa>
+@{
+    ViewData["Title"] = "Pessoa";
+}
+<h1> Lista de Pessoas </h1>
+<p>
+    <a asp-action="Pessoa">Novo</a>
+</p>
+@* <p>
+    <div>
+        @ViewBag.MensagemErro
+    </div>
+</p> *@
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().CodigoFiscal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().InscricaoEstadual)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().NomeFantasia)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Endereco)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Numero)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Bairro)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Cidade)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Estado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().DataNascimento)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(Pessoa item in Model)
+        {
+            <tr>
+               <td>
+                    @Html.DisplayFor(modelItem => item.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CodigoFiscal)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InscricaoEstadual)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NomeFantasia)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Endereco)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Numero)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Bairro)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cidade)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Estado)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DataNascimento)
+                </td>
+                <td>
+                    <a asp-action="Pessoa" asp-route-id="@item.Id">Editar</a>
+                </td>
+                 <td>
+                    <a asp-action="Apagar" asp-route-id="@item.Id">Apagar</a>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

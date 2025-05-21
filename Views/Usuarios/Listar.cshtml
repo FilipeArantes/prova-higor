@@ -1,0 +1,34 @@
+@model List<Usuario>
+@{
+    ViewData["Title"] = "Usuario";
+}
+<h1> Lista de Usuario </h1>
+<table class="table">
+    <thead>
+        <tr>
+           <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Login)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Senha)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(Usuario item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Login)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Senha)
+                </td>
+                <td>
+                    <a asp-action="Usuario" asp-route-id="@item.Id">Editar</a>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

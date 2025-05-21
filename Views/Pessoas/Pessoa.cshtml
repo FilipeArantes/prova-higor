@@ -1,0 +1,122 @@
+@model prova2.Models.Pessoa
+
+@* @{
+ViewData["Title"] = "Pessoa";
+} *@
+<h1 class="display-4">Pessoa</h1>
+<h4>Cadastro</h4>
+<p>
+    <div>
+        @ViewBag.Errors
+    </div>
+</p>
+<div class="row">
+    <div class="col-md-4">
+        @ViewData["mensagem"]
+        <form asp-action="Pessoa" asp-controller="Pessoas" enctype="multipart/form-data">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Nome)
+                @Html.TextBoxFor(model => model.Nome, new {@class="form-control"})
+                @Html.ValidationMessageFor(model => model.Nome)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CodigoFiscal)
+                @Html.TextBoxFor(model => model.CodigoFiscal, new {@class="form-control"})
+                @Html.ValidationMessageFor(model => model.CodigoFiscal)
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.InscricaoEstadual)
+                @Html.TextBoxFor(model => model.InscricaoEstadual, new {@class="form-control", maxlength = "15" })
+                @Html.ValidationMessageFor(model => model.InscricaoEstadual)
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.NomeFantasia)
+                @Html.TextBoxFor(model => model.NomeFantasia, new {@class="form-control"})
+                @Html.ValidationMessageFor(model => model.NomeFantasia)
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Endereco)
+                @Html.TextBoxFor(model => model.Endereco, new {@class="form-control"})
+                @Html.ValidationMessageFor(model => model.Endereco)
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Numero)
+                @Html.TextBoxFor(model => model.Numero, new {@class="form-control"})
+                @Html.ValidationMessageFor(model => model.Numero)
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Bairro)
+                @Html.TextBoxFor(model => model.Bairro, new {@class="form-control"})
+                @Html.ValidationMessageFor(model => model.Bairro)
+            </div>
+            <div class="form-group">
+                <label asp-for="Estado" class="control-label"></label>
+                <select asp-for="Estado" class="form-control" asp-items="ViewBag.Estados" id="estadoDropdown">
+                    <option value="">Selecione um estado</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cidade" class="control-label"></label>
+                <select asp-for="Cidade" class="form-control" asp-items="ViewBag.Cidades" id="cidadeDropdown">
+                    <option value="">Selecione uma cidade</option>
+                </select>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.DataNascimento)
+                <input asp-for="DataNascimento" class="form-control">
+                @Html.ValidationMessageFor(model => model.DataNascimento)
+            </div>
+
+            <div class="form-group">
+                @Html.Label("Imagem")
+                <input type="file" id="anexo" name="anexo">
+            </div>
+            @if (Model != null && Model.Imagem != null) 
+            {
+                <img src="@Model.Imagem" alt="Image" />
+            }
+            @if (Model != null && Model.Id != null)
+            {
+            <a style="margin-top: 20px;" class="btn btn-success" asp-action="Exportar" asp-route-id="@Model.Id">Exportar</a>
+            }
+            <input type="submit" value="Salvar" class="btn btn-success" style="margin-top: 20px;" />
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            function carregarCidades(estado, cidadeSelecionada = null) {
+                if (estado) {
+                    $.ajax({
+                        url: '@Url.Action("GetCidades", "Pessoas")',
+                        data: { estado: estado },
+                        success: function(data) {
+                            var cidadeDropdown = $('#cidadeDropdown');
+                            cidadeDropdown.empty();
+                            cidadeDropdown.append($('<option></option>').val('').text('Selecione uma cidade'));
+                            $.each(data, function(index, item) {
+                                var option = $('<option></option>').val(item).text(item);
+                                if (item === cidadeSelecionada) {
+                                    option.attr("selected", "selected");
+                                }
+                                cidadeDropdown.append(option);
+                            });
+                        }
+                    });
+                }
+            }
+
+            $('#estadoDropdown').change(function() {
+                var estado = $(this).val();
+                carregarCidades(estado);
+            });
+
+            @* var estadoSelecionado = $('#estadoDropdown').val();
+            var cidadeSelecionada = '@Model?.Cidade';
+            carregarCidades(estadoSelecionado, cidadeSelecionada); *@
+        });
+    </script>
+}

@@ -1,0 +1,10 @@
+/home/ipeweb/Documents/ueg/prova2/bin/Release/net8.0/publish/prova2
+/home/ipeweb/Documents/ueg/prova2/bin/Release/net8.0/publish/appsettings.Development.json
+/home/ipeweb/Documents/ueg/prova2/bin/Release/net8.0/publish/appsettings.json
+/home/ipeweb/Documents/ueg/prova2/bin/Release/net8.0/publish/Cidades.json
+/home/ipeweb/Documents/ueg/prova2/bin/Release/net8.0/publish/Pessoa.json
+/home/ipeweb/Documents/ueg/prova2/bin/Release/net8.0/publish/Usuario.json
+/home/ipeweb/Documents/ueg/prova2/bin/Release/net8.0/publish/prova2.dll
+/home/ipeweb/Documents/ueg/prova2/bin/Release/net8.0/publish/prova2.deps.json
+/home/ipeweb/Documents/ueg/prova2/bin/Release/net8.0/publish/prova2.runtimeconfig.json
+/home/ipeweb/Documents/ueg/prova2/bin/Release/net8.0/publish/prova2.pdb
