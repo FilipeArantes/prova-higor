@@ -1,29 +1,49 @@
 @model prova2.Models.Usuario
 
 @{
-    ViewData["Title"] = "Login";    
+    ViewData["Title"] = "Entrar";
 }
 
-<h1> @ViewData["Title"] </h1>
-<p>
-    <div>
-        @ViewBag.Errors
-    </div>
-</p>
-<div class="row">
-    <div class="col-md-4">        
-        <form asp-action="Login" asp-controller="Home">
-            <div class="form-group">
-                @Html.LabelFor(model => model.Login)
-                @Html.TextBoxFor(model => model.Login, new {@class="form-control"})
-                @Html.ValidationMessageFor(model => model.Login)
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <h1 class="h3 mb-0">@ViewData["Title"]</h1>
+                </div>
+                <div class="card-body p-4">
+                    @if (!string.IsNullOrEmpty(ViewBag.Errors))
+                    {
+                        <div class="alert alert-danger mb-3" role="alert">
+                            @ViewBag.Errors
+                        </div>
+                    }
+
+                    <form asp-action="Login" asp-controller="Home" method="post" class="needs-validation" novalidate>
+                        <div class="form-group mb-3">
+                            <label for="Login" class="form-label">Usuário</label>
+                            @Html.TextBoxFor(model => model.Login, new {@class="form-control", placeholder = "Digite seu usuário"})
+                            @Html.ValidationMessageFor(model => model.Login, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label for="Senha" class="form-label">Senha</label>
+                            @Html.PasswordFor(model => model.Senha, new {@class="form-control", placeholder = "Digite sua senha"})
+                            @Html.ValidationMessageFor(model => model.Senha, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Entrar
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                @Html.LabelFor(model => model.Senha)
-                @Html.TextBoxFor(model => model.Senha, new {@class="form-control"})
-                @Html.ValidationMessageFor(model => model.Senha)
-            </div>            
-            <input type="submit" value="Login" class="btn btn-primary"/>    
-        </form>
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+}

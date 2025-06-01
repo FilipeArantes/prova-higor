@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-namespace prova2.Models;
 
 // Modelo de dados base
 public class Entity
@@ -13,26 +12,37 @@ public class Entity
 // Classe que simula o banco de dados
 public class Repositorio<TModel> where TModel : Entity   
 {
-    private static string localArquivos = "";
+    private static string localArquivos = ".";
     private string arquivoRepositorio;
+
+    private List<TModel> models;
 
     public Repositorio()
     {
         arquivoRepositorio = GetArquivo<TModel>();
-    }
+        this.models = Listar();
+    }    
 
     private static string GetArquivo<TModel>()
     {
-       return $"{localArquivos}{typeof(TModel).Name}.json";
+       return $"{localArquivos}/{typeof(TModel).Name}.json";
     }
 
     // Adiciona um novo objeto ao arquivo JSON
     public void Adicionar(TModel model)
-    {
-        var models = Listar();
-        model.Id = (models.Max(p => (int?)p.Id) ?? 0 )+ 1;
-        models.Add(model);
-        Salvar(models);
+    {        
+        if (model.Id == 0)
+            model.Id = (this.models.Max(p => (int?)p.Id) ?? 0 )+ 1;
+        
+        this.models.Add(model);
+        Salvar(this.models);        
+    }
+
+    // Busca um objeto pelo ID
+    public void Atualizar(TModel modelo)
+    {  
+        this.Remover(modelo.Id);
+        this.Adicionar(modelo);
     }
 
     // Busca um objeto pelo ID
@@ -44,9 +54,8 @@ public class Repositorio<TModel> where TModel : Entity
 
     // Remove um objeto pelo ID
     public void Remover(int id)
-    {
-        var models = Listar();
-        models.RemoveAll(u => u.Id == id);
+    {        
+        this.models.RemoveAll(u => u.Id == id);
         Salvar(models);
     }
 
@@ -67,24 +76,7 @@ public class Repositorio<TModel> where TModel : Entity
     {
         var json = JsonSerializer.Serialize(model, new JsonSerializerOptions { WriteIndented = true });
         File.WriteAllText(arquivoRepositorio, json);
-    }
 
-    public void Atualizar(TModel model)
-    {
-        var models = Listar();
-        bool boEncontrado = false;
-        int tamanhoModel = models.Count;
-        
-        for (int i = 0; i < tamanhoModel; i++) {
-            if (models[i].Id == model.Id) {
-                boEncontrado = true;
-                models[i] = model;
-                break;
-            }
-        }
-        
-        if (boEncontrado) {
-            Salvar(models);
-        }
+        this.models = model;
     }
 }

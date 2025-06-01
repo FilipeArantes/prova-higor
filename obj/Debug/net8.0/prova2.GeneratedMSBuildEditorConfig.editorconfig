@@ -30,16 +30,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9Qcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/home/linus/Documentos/faculdade/aula2025/progweb/prova2/Views/Pessoas/Apagar.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGVzc29hcy9BcGFnYXIuY3NodG1s
+[/home/linus/Documentos/faculdade/aula2025/progweb/prova2/Views/Pessoas/ConfirmarApagar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGVzc29hcy9Db25maXJtYXJBcGFnYXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/linus/Documentos/faculdade/aula2025/progweb/prova2/Views/Pessoas/FormularioPessoa.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGVzc29hcy9Gb3JtdWxhcmlvUGVzc29hLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [/home/linus/Documentos/faculdade/aula2025/progweb/prova2/Views/Pessoas/Listar.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGVzc29hcy9MaXN0YXIuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[/home/linus/Documentos/faculdade/aula2025/progweb/prova2/Views/Pessoas/Pessoa.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGVzc29hcy9QZXNzb2EuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [/home/linus/Documentos/faculdade/aula2025/progweb/prova2/Views/Shared/Error.cshtml]

@@ -1,25 +1,57 @@
 @model prova2.Models.Usuario
 
 @{
-    ViewData["Title"] = "Usuario";
+    ViewData["Title"] = "Usuário";
 }
-<h1 class="display-4">Usuario</h1>
-<h4>Cadastro</h4>
-<div class="row">
-    <div class="col-md-4">
-        @ViewData["mensagem"]
-        <form asp-action="Usuario" asp-controller="Usuarios" enctype="multipart/form-data">
-            <div class="form-group">
-                @Html.LabelFor(model => model.Login)
-                @Html.TextBoxFor(model => model.Login, new {@class="form-control" })
-                @Html.ValidationMessageFor(model => model.Login)
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <h1 class="h3 mb-0">Cadastro de Usuário</h1>
+                </div>
+                <div class="card-body p-4">
+                    @if (!string.IsNullOrEmpty(ViewBag.Errors))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @ViewBag.Errors
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(ViewData["mensagem"] as string))
+                    {
+                        <div class="alert alert-info" role="alert">
+                            @ViewData["mensagem"]
+                        </div>
+                    }
+
+                    <form asp-action="SalvarUsuario" asp-controller="Usuarios" method="post" class="needs-validation" novalidate>
+                        @Html.HiddenFor(model => model.Id)
+
+                        <div class="form-group mb-3">
+                            <label for="Login" class="form-label">Login</label>
+                            @Html.TextBoxFor(model => model.Login, new {@class="form-control", placeholder = "Digite seu login"})
+                            @Html.ValidationMessageFor(model => model.Login, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label for="Senha" class="form-label">Senha</label>
+                            @Html.PasswordFor(model => model.Senha, new {@class="form-control", placeholder = "Digite sua senha"})
+                            @Html.ValidationMessageFor(model => model.Senha, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="bi bi-save me-2"></i>Salvar Usuário
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                @Html.LabelFor(model => model.Senha)
-                @Html.TextBoxFor(model => model.Senha, new {@class="form-control"})
-                @Html.ValidationMessageFor(model => model.Senha)
-            </div>
-            <input type="submit" value="Salvar" class="btn btn-success" style="margin-top: 20px;" />
-        </form>
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+}

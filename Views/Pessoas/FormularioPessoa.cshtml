@@ -1,0 +1,179 @@
+@model prova2.Models.Pessoa
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <h1 class="h3 mb-0">@(Model?.Id != null && Model.Id != 0 ? "Editar Pessoa" : "Cadastro de Pessoa")</h1>
+                </div>
+                <div class="card-body p-4">
+                    <div class="alert alert-danger" role="alert" @(!string.IsNullOrEmpty(ViewBag.Errors) ? "" : "hidden")>
+                        @ViewBag.Errors
+                    </div>
+                    <div class="alert alert-info" role="alert" @(!string.IsNullOrEmpty(ViewData["mensagem"] as string) ? "" : "hidden")>
+                        @ViewData["mensagem"]
+                    </div>
+
+                    <form asp-action="Salvar" asp-controller="Pessoas" enctype="multipart/form-data"
+                        class="needs-validation" novalidate>
+                        @Html.HiddenFor(model => model.Id)
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="Nome" class="form-label">Nome</label>
+                                    @Html.TextBoxFor(model => model.Nome, new {@class="form-control", placeholder =
+                                    "Digite o nome"})
+                                    @Html.ValidationMessageFor(model => model.Nome, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="CodigoFiscal" class="form-label">Código Fiscal</label>
+                                    @Html.TextBoxFor(model => model.CodigoFiscal, new {@class="form-control", placeholder = "Digite o código fiscal"})
+                                    @Html.ValidationMessageFor(model => model.CodigoFiscal, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="InscricaoEstadual" class="form-label">Inscrição Estadual</label>
+                                    @Html.TextBoxFor(model => model.InscricaoEstadual, new {@class="form-control", maxlength = "15", placeholder = "Digite a inscrição estadual"})
+                                    @Html.ValidationMessageFor(model => model.InscricaoEstadual, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="NomeFantasia" class="form-label">Nome Fantasia</label>
+                                    @Html.TextBoxFor(model => model.NomeFantasia, new {@class="form-control", placeholder = "Digite o nome fantasia"})
+                                    @Html.ValidationMessageFor(model => model.NomeFantasia, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group mb-3">
+                                    <label for="Endereco" class="form-label">Endereço</label>
+                                    @Html.TextBoxFor(model => model.Endereco, new {@class="form-control", placeholder = "Digite o endereço"})
+                                    @Html.ValidationMessageFor(model => model.Endereco, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                    <label for="Numero" class="form-label">Número</label>
+                                    @Html.TextBoxFor(model => model.Numero, new {@class="form-control", placeholder = "Nº"})
+                                    @Html.ValidationMessageFor(model => model.Numero, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="Bairro" class="form-label">Bairro</label>
+                                    @Html.TextBoxFor(model => model.Bairro, new {@class="form-control", placeholder = "Digite o bairro"})
+                                    @Html.ValidationMessageFor(model => model.Bairro, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="Estado" class="form-label">Estado</label>
+                                    <select asp-for="Estado" class="form-select" asp-items="ViewBag.Estados" id="estadoDropdown">
+                                        <option value="">Selecione um estado</option>
+                                    </select>
+                                    @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="Cidade" class="form-label">Cidade</label>
+                                    <select asp-for="Cidade" class="form-select" asp-items="ViewBag.Cidades"
+                                        id="cidadeDropdown">
+                                        <option value="">Selecione uma cidade</option>
+                                    </select>
+                                    @Html.ValidationMessageFor(model => model.Cidade, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="DataNascimento" class="form-label">Data de Nascimento</label>
+                                    <input asp-for="DataNascimento" type="date" class="form-control">
+                                    @Html.ValidationMessageFor(model => model.DataNascimento, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label for="anexo" class="form-label">Imagem de Perfil</label>
+                            <input type="file" id="anexo" name="arquivoAnexo" class="form-control">
+                            @if (Model != null && Model.Imagem != null)
+                            {
+                                <div class="mt-3">
+                                    <img src="@Model.Imagem" alt="Imagem de Perfil" class="img-thumbnail"
+                                        style="max-width: 200px; height: auto;" />
+                                </div>
+                            }
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <button type="submit" class="btn btn-success ms-auto">
+                                <i class="bi bi-save me-2"></i>Salvar Pessoa
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            function carregarCidades(estado, cidadeSelecionada = null) {
+                var cidadeDropdown = $('#cidadeDropdown');
+                cidadeDropdown.empty();
+                cidadeDropdown.append($('<option></option>').val('').text('Selecione uma cidade'));
+
+                if (estado) {
+                    $.ajax({
+                        url: '@Url.Action("GetCidades", "Pessoas")',
+                        data: { estado: estado },
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            $.each(data, function (index, item) {
+                                var option = $('<option></option>').val(item).text(item);
+                                if (item === cidadeSelecionada) {
+                                    option.attr("selected", "selected");
+                                }
+                                cidadeDropdown.append(option);
+                            });
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Erro ao carregar cidades: ", status, error);
+                        }
+                    });
+                }
+            }
+
+            $('#estadoDropdown').change(function () {
+                var estadoAtual = $(this).val();
+                carregarCidades(estadoAtual);
+            });
+
+            var estadoInicial = $('#estadoDropdown').val();
+            var cidadeInicial = '@(Model?.Cidade ?? string.Empty)';
+            if (estadoInicial) {
+                carregarCidades(estadoInicial, cidadeInicial);
+            }
+        });
+    </script>
+}

@@ -59,8 +59,7 @@ public class UsuariosController : Controller
         Repositorio<Usuario> repo = new Repositorio<Usuario>();
         Usuario Usuario = repo.Buscar(id);
         
-        if (Usuario == null)
-        {
+        if (Usuario == null) {
             return NotFound();
         }
 
@@ -86,8 +85,7 @@ public class UsuariosController : Controller
         Repositorio<Usuario> repo = new Repositorio<Usuario>();
         Usuario Usuario = repo.Buscar(id);
         
-        if (Usuario == null)
-        {
+        if (Usuario == null) {
             return NotFound();
         }
 
