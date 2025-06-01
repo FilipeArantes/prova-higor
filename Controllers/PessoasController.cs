@@ -2,12 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using prova2.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Text.Json; // Remover Reflection.Metadata.Ecma335 se não estiver em uso
-using System;
-using System.IO;
-using System.Globalization;
-using System.Linq;
-using System.Text;
+using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 
 [Authorize]
@@ -96,7 +91,6 @@ public class PessoasController : Controller
         return new List<string>();
     }
 
-    // Ação para exibir a lista de pessoas (a Home da Pessoas)
     public IActionResult Listar(string mensagemAlerta = null)
     {
         Repositorio<Pessoa> gerenciadorPessoas = new Repositorio<Pessoa>();
@@ -106,18 +100,16 @@ public class PessoasController : Controller
         return View(listaDePessoas);
     }
 
-    // Ação para exibir o formulário para criar uma NOVA pessoa
     [HttpGet]
     public IActionResult Criar()
     {
         var todosOsEstados = ObterNomesEstados();
-        ViewBag.Estados = new SelectList(todosOsEstados); // Para nova pessoa, não há estado selecionado
-        ViewBag.Cidades = new SelectList(new List<string>()); // Cidades vazias inicialmente
+        ViewBag.Estados = new SelectList(todosOsEstados);
+        ViewBag.Cidades = new SelectList(new List<string>());
 
-        return View("FormularioPessoa", new Pessoa()); // Renderiza a View FormularioPessoa
+        return View("FormularioPessoa", new Pessoa());
     }
 
-    // Ação para exibir o formulário para EDITAR uma pessoa existente
     [HttpGet]
     public IActionResult Editar(int id)
     {
@@ -140,16 +132,16 @@ public class PessoasController : Controller
         }
         ViewBag.Cidades = new SelectList(cidadesRelacionadas, pessoaDetalhe.Cidade);
 
-        return View("FormularioPessoa", pessoaDetalhe); // Renderiza a View FormularioPessoa com os dados da pessoa
+        return View("FormularioPessoa", pessoaDetalhe);
     }
 
-    // Ação para salvar (criar ou atualizar) uma pessoa
+
     [HttpPost]
     public IActionResult Salvar(Pessoa dadosPessoa, IFormFile? arquivoAnexo)
     {
         if (!ModelState.IsValid)
         {
-            // Logar erros de validação para depuração
+
             foreach (var modelStateEntry in ModelState.Values)
             {
                 foreach (var error in modelStateEntry.Errors)
@@ -178,7 +170,7 @@ public class PessoasController : Controller
                 cidadesDoEstado = ObterCidadesPorNomeEstado(dadosPessoa.Estado);
             }
             ViewBag.Cidades = new SelectList(cidadesDoEstado, dadosPessoa?.Cidade);
-            return View("FormularioPessoa", dadosPessoa); // Retorna para a View FormularioPessoa com os dados e erros
+            return View("FormularioPessoa", dadosPessoa);
         }
 
         string caminhoImagemSalva = null;
@@ -245,15 +237,15 @@ public class PessoasController : Controller
             return NotFound();
         }
 
-        return View("ConfirmarApagar", pessoaParaRemover); // View de confirmação de exclusão
+        return View("ConfirmarApagar", pessoaParaRemover);
     }
 
     [HttpPost]
-    [ActionName("Apagar")] // Garante que essa ação responda ao POST de /Pessoas/Apagar
-    public IActionResult ConfirmarApagar(int id) // Recebe o ID do formulário de confirmação
+    [ActionName("Apagar")]
+    public IActionResult ConfirmarApagar(int id)
     {
         Repositorio<Pessoa> repositorioDelete = new Repositorio<Pessoa>();
-        repositorioDelete.Remover(id); // Remove usando o ID diretamente
+        repositorioDelete.Remover(id);
         return RedirectToAction("Listar");
     }
 }
