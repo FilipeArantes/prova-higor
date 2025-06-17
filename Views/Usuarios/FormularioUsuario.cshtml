@@ -9,7 +9,7 @@
         <div class="col-lg-6 col-md-8">
             <div class="card shadow-lg border-0 rounded-lg">
                 <div class="card-header bg-primary text-white text-center py-4">
-                    <h1 class="h3 mb-0">Cadastro de Usuário</h1>
+                    <h1 class="h3 mb-0">@ViewData["Title"]</h1>
                 </div>
                 <div class="card-body p-4">
                     @if (!string.IsNullOrEmpty(ViewBag.Errors))
@@ -25,7 +25,7 @@
                         </div>
                     }
 
-                    <form asp-action="SalvarUsuario" asp-controller="Usuarios" method="post" class="needs-validation" novalidate>
+                    <form asp-action="Salvar" asp-controller="Usuarios" method="post" class="needs-validation" novalidate>
                         @Html.HiddenFor(model => model.Id)
 
                         <div class="form-group mb-3">
@@ -36,11 +36,17 @@
 
                         <div class="form-group mb-4">
                             <label for="Senha" class="form-label">Senha</label>
-                            @Html.PasswordFor(model => model.Senha, new {@class="form-control", placeholder = "Digite sua senha"})
+                            @Html.PasswordFor(model => model.Senha, new {@class="form-control", placeholder = (Model?.Id != null && Model.Id != 0) ? "Deixe em branco para manter a senha atual" : "Digite sua senha"})
                             @Html.ValidationMessageFor(model => model.Senha, "", new { @class = "text-danger" })
                         </div>
 
-                        <div class="d-grid">
+                        <div class="d-grid gap-2">
+                            @if (Model != null && Model.Id != null && Model.Id != 0)
+                            {
+                                <a asp-action="Listar" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-left me-2"></i>Voltar à Lista
+                                </a>
+                            }
                             <button type="submit" class="btn btn-success btn-lg">
                                 <i class="bi bi-save me-2"></i>Salvar Usuário
                             </button>
@@ -53,5 +59,6 @@
 </div>
 
 @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 }

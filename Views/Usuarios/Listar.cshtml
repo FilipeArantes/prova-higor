@@ -11,6 +11,11 @@
                     <h1 class="h3 mb-0">Lista de Usuários</h1>
                 </div>
                 <div class="card-body p-4">
+                    <p class="text-end mb-3">
+                        <a asp-action="Criar" class="btn btn-success">
+                            <i class="bi bi-person-plus me-2"></i>Novo Usuário
+                        </a>
+                    </p>
                     @if (Model != null && Model.Any())
                     {
                         <div class="table-responsive">
@@ -19,6 +24,7 @@
                                     <tr>
                                         <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Login)</th>
                                         <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Senha)</th>
+                                        <th class="text-center">Ações</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -27,6 +33,14 @@
                                         <tr>
                                             <td>@Html.DisplayFor(modelItem => item.Login)</td>
                                             <td>@Html.DisplayFor(modelItem => item.Senha)</td>
+                                            <td class="text-center">
+                                                <a asp-action="Editar" asp-route-id="@item.Id" class="btn btn-sm btn-info me-2">
+                                                    <i class="bi bi-pencil-square"></i> Editar
+                                                </a>
+                                                <a asp-action="Apagar" asp-route-id="@item.Id" class="btn btn-sm btn-danger">
+                                                    <i class="bi bi-trash"></i> Apagar
+                                                </a>
+                                            </td>
                                         </tr>
                                     }
                                 </tbody>
@@ -36,7 +50,7 @@
                     else
                     {
                         <div class="alert alert-warning text-center" role="alert">
-                            Nenhum usuário cadastrado.
+                            Nenhum usuário cadastrado. <a asp-action="Criar">Clique aqui para adicionar um.</a>
                         </div>
                     }
                 </div>

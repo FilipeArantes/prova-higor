@@ -4,99 +4,136 @@ using prova2.Models;
 using System.Text.Json;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Authorization;
-namespace prova2.Controllers;
-[Authorize]
+using System.Linq;
 
+namespace prova2.Controllers;
+
+[Authorize]
 public class UsuariosController : Controller
 {
-    private readonly ILogger<UsuariosController> _logger;
+    private readonly ILogger<UsuariosController> _logHandler;
 
     public UsuariosController(ILogger<UsuariosController> logger)
     {
-        _logger = logger;
-    }
-
-    public IActionResult Usuario()
-    {
-        return View();
+        _logHandler = logger;
     }
 
     public IActionResult Listar()
     {
-        Repositorio<Usuario> repo = new Repositorio<Usuario>();
-        List<Usuario> lista = repo.Listar();
-        return View(lista);
+        Repositorio<Usuario> gerenciarUsuarios = new Repositorio<Usuario>();
+        List<Usuario> listaDeUsuarios = gerenciarUsuarios.Listar();
+        return View(listaDeUsuarios);
     }
 
     [HttpGet]
-    public IActionResult Usuario(int id = 0)
+    public IActionResult Criar()
     {
-        Repositorio<Usuario> repo = new Repositorio<Usuario>();
-        Usuario usuario = repo.Buscar(id);
 
-        usuario.Senha = "";
-
-        return View(usuario);
+        return View("FormularioUsuario", new Usuario());
     }
 
-    [HttpPost]
-    public IActionResult Usuario(Usuario model)
-    {
-        if(!ModelState.IsValid) {
-            return View(model);
-        }   
-        Repositorio<Usuario> repo = new Repositorio<Usuario>();
-        Hash hash = new Hash(SHA256.Create());
-        model.Senha = hash.CriptografarSenha(model.Senha);
-        if (model.Id != null) {
-            repo.Atualizar(model);
-        }
-        return RedirectToAction("Listar");
-    }
-
+    [HttpGet]
     public IActionResult Editar(int id)
     {
-        Repositorio<Usuario> repo = new Repositorio<Usuario>();
-        Usuario Usuario = repo.Buscar(id);
-        
-        if (Usuario == null) {
-            return NotFound();
+        Repositorio<Usuario> gerenciarUsuarios = new Repositorio<Usuario>();
+        Usuario usuarioDetalhe = gerenciarUsuarios.Buscar(id);
+
+        if (usuarioDetalhe == null)
+        {
+            _logHandler.LogWarning($"Usuário com ID {id} não encontrado para edição.");
+            return RedirectToAction("Listar", new { MensagemErro = "Usuário não encontrado para edição." });
         }
 
-        return View(Usuario);
+        usuarioDetalhe.Senha = "";
+        return View("FormularioUsuario", usuarioDetalhe);
     }
 
     [HttpPost]
-    public IActionResult Editar(Usuario Usuario)
+    public IActionResult Salvar(Usuario dadosUsuario)
     {
-        if(!ModelState.IsValid) {
-            return View(Usuario);
+        if (!ModelState.IsValid)
+        {
+            foreach (var modelStateEntry in ModelState.Values)
+            {
+                foreach (var error in modelStateEntry.Errors)
+                {
+                    _logHandler.LogError($"Erro de Validação: {error.ErrorMessage}");
+                }
+            }
+            foreach (var key in ModelState.Keys)
+            {
+                if (ModelState[key].Errors.Any())
+                {
+                    _logHandler.LogError($"Campo '{key}' com erro(s):");
+                    foreach (var error in ModelState[key].Errors)
+                    {
+                        _logHandler.LogError($"- {error.ErrorMessage}");
+                    }
+                }
+            }
+            return View("FormularioUsuario", dadosUsuario);
         }
-        Repositorio<Usuario> repo = new Repositorio<Usuario>();
-        Hash hash = new Hash(SHA256.Create());
-        Usuario.Senha = hash.CriptografarSenha(Usuario.Senha);
-        repo.Atualizar(Usuario);
+
+        Repositorio<Usuario> gerenciarUsuarios = new Repositorio<Usuario>();
+        Hash criadorHash = new Hash(SHA256.Create());
+        dadosUsuario.Senha = criadorHash.CriptografarSenha(dadosUsuario.Senha);
+
+        bool isNewUser = dadosUsuario.Id == null || dadosUsuario.Id == 0;
+
+        if (isNewUser)
+        {
+            var loginExistente = gerenciarUsuarios.Listar().FirstOrDefault(u => u.Login.Equals(dadosUsuario.Login, StringComparison.OrdinalIgnoreCase));
+            if (loginExistente != null)
+            {
+                ModelState.AddModelError("Login", "Este login já está em uso.");
+                return View("FormularioUsuario", dadosUsuario);
+            }
+            gerenciarUsuarios.Adicionar(dadosUsuario);
+        }
+        else
+        {
+            var loginExistente = gerenciarUsuarios.Listar().FirstOrDefault(u => u.Login.Equals(dadosUsuario.Login, StringComparison.OrdinalIgnoreCase) && u.Id != dadosUsuario.Id);
+            if (loginExistente != null)
+            {
+                ModelState.AddModelError("Login", "Este login já está em uso por outro usuário.");
+                return View("FormularioUsuario", dadosUsuario);
+            }
+
+
+            if (string.IsNullOrEmpty(dadosUsuario.Senha))
+            {
+                var usuarioOriginal = gerenciarUsuarios.Buscar(dadosUsuario.Id);
+                if (usuarioOriginal != null)
+                {
+                    dadosUsuario.Senha = usuarioOriginal.Senha;
+                }
+            }
+            gerenciarUsuarios.Atualizar(dadosUsuario);
+        }
 
         return RedirectToAction("Listar");
     }
 
+    [HttpGet]
     public IActionResult Apagar(int id)
     {
-        Repositorio<Usuario> repo = new Repositorio<Usuario>();
-        Usuario Usuario = repo.Buscar(id);
-        
-        if (Usuario == null) {
+        Repositorio<Usuario> gerenciarUsuarios = new Repositorio<Usuario>();
+        Usuario usuarioParaRemover = gerenciarUsuarios.Buscar(id);
+
+        if (usuarioParaRemover == null)
+        {
             return NotFound();
         }
 
-        return View(Usuario);
+        return View("ConfirmarApagarUsuario", usuarioParaRemover);
     }
 
     [HttpPost]
-    public IActionResult Apagar(Usuario Usuario)
+    [ActionName("Apagar")]
+    public IActionResult ConfirmarApagar(int id)
     {
-        Repositorio<Usuario> repo = new Repositorio<Usuario>();
-        repo.Remover(Usuario.Id);
+        Repositorio<Usuario> gerenciarUsuarios = new Repositorio<Usuario>();
+        gerenciarUsuarios.Remover(id);
         return RedirectToAction("Listar");
     }
 }
