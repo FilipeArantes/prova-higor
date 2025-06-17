@@ -248,4 +248,13 @@ public class PessoasController : Controller
         repositorioDelete.Remover(id);
         return RedirectToAction("Listar");
     }
+
+    public FileContentResult Exportar(int id)
+    {
+        Repositorio<Pessoa> repo = new Repositorio<Pessoa>();
+        Pessoa model = repo.Buscar(id);
+        string json = JsonSerializer.Serialize(model);
+
+        return File(new System.Text.UTF8Encoding().GetBytes(json), "text/json", "Dados Json");
+    }
 }
